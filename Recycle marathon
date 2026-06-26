@@ -11,6 +11,7 @@ animations = []
 level = 1
 total_levels = 10
 game_over = False
+start = False
 
 def draw():
     global actor
@@ -22,33 +23,36 @@ def update():
     pass
 
 def on_mouse_down(pos):
-    global level, game_over
-    for actor in actors:
-        if actor.collidepoint(pos):
-            if actor.image == "paper_bag":
-                actors.clear()
-                level += 1 
-                create_actors()
-            else:
-                actors.clear()
-                game_over = True
+    global level, game_over, start
+    start = True
+    if start == True:
+        for actor in actors:
+            if actor.collidepoint(pos):
+                if actor.image == "paper_bag":
+                    actors.clear()
+                    level += 1 
+                    create_actors()
+                else:
+                    actors.clear()
+                    game_over = True
 
 
 def create_actors():
-    global level
-    for i in range(level):
-        choice = random.choice(non_recyclable)
-        actors.append(Actor(choice))
-    actors.append(Actor("paper_bag"))
+    global level, start
+    if start == True:
+        for i in range(level):
+            choice = random.choice(non_recyclable)
+            actors.append(Actor(choice))
+        actors.append(Actor("paper_bag"))
 
-    random.shuffle(actors)
-    gap_size = 1210 // (len(actors) + 1)
-    for i in range(len(actors)):
-        actors[i].pos = (gap_size * (i + 1), 70)
-    
-    for actor in actors:
-        fall = animate(actor, y = 908, duration = 5 - 0.1 * (level - 1))
-        animations.append(fall)
+        random.shuffle(actors)
+        gap_size = 1210 // (len(actors) + 1)
+        for i in range(len(actors)):
+            actors[i].pos = (gap_size * (i + 1), 70)
+        
+        for actor in actors:
+            fall = animate(actor, y = 908, duration = 5 - 0.1 * (level - 1))
+            animations.append(fall)
 
 create_actors()
 
